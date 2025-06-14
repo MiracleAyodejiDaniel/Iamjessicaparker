@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banking UI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background:  #f4f9ff;
+      color: #f4f9ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app {
+      width: 350px;
+      background: #fff;
+      border-radius: 30px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      max-height: 87vh;
+    }
+
+    .header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .greeting {
+      font-size: 14px;
+      color: #999;
+    }
+
+    .username {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .profile-image {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #00cc66;
+}
+
+.online-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #00cc66;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5);
+}
+
+    .balance {
+      text-align: center;
+      font-size: 40px;
+      font-weight: 700;
+      margin: 10px 0 20px;
+      color: #111;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 24px;
+      padding: 0 10px;
+    }
+
+    .action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .action-icon {
+      background: linear-gradient(135deg, #b9fbc0, #00cc66);
+      color: #fff;
+      padding: 16px;
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      font-size: 20px;
+      margin-bottom: 6px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .action-icon:hover {
+      transform: scale(1.12);
+    }
+
+    .action-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .transactions {
+      background: #f8f9fb;
+      flex: 1;
+      overflow-y: auto;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 22px 18px;
+    }
+
+    .transactions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 15px;
+      color: #555;
+    }
+
+    .transaction {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      padding: 14px;
+      margin-bottom: 14px;
+      border-radius: 20px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+
+    .transaction:hover {
+      transform: scale(1.015);
+    }
+
+    .transaction img, .transaction i {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      margin-right: 14px;
+      background: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: #444;
+    }
+
+    .transaction-info {
+      flex: 1;
+    }
+
+    .transaction-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #222;
+    }
+
+    .transaction-meta {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .transaction-amount {
+      font-weight: 600;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+  max-width: 390px;
+  background: #f4f9ff;
+  padding: 12px 6px;
+  border-radius: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+
+.bottom-nav i {
+  color: #aaa;
+  font-size: 22px;
+  transition: all 0.3s ease;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.bottom-nav i:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: scale(1.15);
+  color: #00cc66;
+}
+
+.bottom-nav .active {
+  color: #00cc66;
+  background: rgba(0, 204, 102, 0.1);
+  box-shadow: 0 0 10px rgba(0, 204, 102, 0.6);
+  transform: scale(1.2);
+}
+
+.access-warning {
+  display: none;
+  top: 0px;
+  background: #00cc66;
+  color: white;
+  text-align: center;
+  padding: 12px 16px;
+  position: absolute;
+  border-radius: 18px;
+  font-weight: 500;
+  z-index: 9999;
+  margin: 10px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.access-warning i {
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.caterpillar-loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background: linear-gradient(135deg, #b9fbc0, #00cc66);
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: #fff;
+  display: block;
+}
+
+.caterpillar-loader p {
+  color: #fff;
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: Times New Roman;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dots span {
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.dots span:nth-child(1) { animation-delay: 0s; }
+.dots span:nth-child(2) { animation-delay: 0.1s; }
+.dots span:nth-child(3) { animation-delay: 0.2s; }
+.dots span:nth-child(4) { animation-delay: 0.3s; }
+.dots span:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+.completed-message {
+  align-items: center;
+  display: none;
+  position: absolute;
+  background: #111;
+  color: #fff;
+  padding: 30px 50px;
+  border-radius: 20px;
+}
+
+.completed-message i {
+  color: #00ff99;
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+.account-agreement-box {
+  width: 92%;
+  max-width: 400px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 20px 15px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 30px;
+  color: #222;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  text-align: left;
+  display: none;
+  z-index: 1000;
+  border: 1px solid #e0e0e0;
+}
+
+.account-agreement-box h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 22px;
+  color: #00cc66;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.account-agreement-box label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+}
+
+.account-agreement-box input[type="text"] {
+  width: 100%;
+  padding: 11px 13px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  color: #333;
+  font-size: 15px;
+  transition: border 0.3s ease;
+}
+
+.account-agreement-box input[type="text"]:focus {
+  border-color: #00cc66;
+  outline: none;
+  background: #fff;
+}
+
+.checkbox-area {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 15px 0 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.checkbox-area input[type="checkbox"] {
+  margin-top: 4px;
+  transform: scale(1.2);
+  accent-color: #00cc66;
+  cursor: pointer;
+}
+
+.checkbox-area label {
+  color: #444;
+}
+
+.checkbox-area strong {
+  color: #00cc66;
+}
+
+.continue-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: #00cc66;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15.5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.continue-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.continue-btn:hover {
+  background: #00b25a;
+}
+
+.congrats-box {
+      background: #ffffff;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      display: none;
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 420px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .congrats-box h2 {
+      font-size: 2rem;
+      color: #2ecc71;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .congrats-box p {
+      font-size: 1rem;
+      color: #555;
+      margin: 0.4rem 0;
+    }
+
+    .congrats-box code {
+      background: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #dffbe9;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      animation: pop 0.6s ease;
+    }
+
+    .checkmark::after {
+      content: '✔';
+      font-size: 2.5rem;
+      color: #2ecc71;
+    }
+
+    .congrats-box button {
+      margin-top: 1.8rem;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .congrats-box button:hover {
+      background: linear-gradient(135deg, #219150, #27ae60);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(39, 174, 96, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="user-info">
+        <div class="greeting">Hey, Dean</div>
+        <div class="username">Welcome back</div>
+      </div>
+      <div class="profile-image">
+  <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Dean">
+  <span class="online-status"></span>
+</div>
+    </div>
+
+    <div class="balance">$155 804.1</div>
+
+    <div class="actions">
+      <div class="action">
+        <div class="action-icon"><i class="fas fa-arrow-down"></i></div>
+        <div class="action-label">Deposit</div>
+      </div>
+      <div class="action">
+        <div class="action-icon"><i class="fas fa-arrow-up"></i></div>
+        <div class="action-label">Withdraw</div>
+      </div>
+      <div class="action">
+        <div class="action-icon"><i class="fas fa-right-left"></i></div>
+        <div class="action-label">Transfer</div>
+      </div>
+    </div>
+
+    <div class="transactions">
+  <div class="transactions-header">
+    <div>Transactions</div>
+    <div>June ▾</div>
+  </div>
+
+  <!-- Unique Transactions -->
+  <div class="transaction">
+    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Adam">
+    <div class="transaction-info">
+      <div class="transaction-name">Adam West</div>
+      <div class="transaction-meta">3:25PM</div>
+    </div>
+    <div class="transaction-amount" style="color: #0ca750;">+$200</div>
+  </div>
+
+  <div class="transaction">
+    <i class="fab fa-spotify"></i>
+    <div class="transaction-info">
+      <div class="transaction-name">Spotify</div>
+      <div class="transaction-meta">Dec. 19th</div>
+    </div>
+    <div class="transaction-amount" style="color: red;">-$4.99</div>
+  </div>
+
+  <div class="transaction">
+    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Jenny">
+    <div class="transaction-info">
+      <div class="transaction-name">Jenny Wilson</div>
+      <div class="transaction-meta">Dec. 17th</div>
+    </div>
+    <div class="transaction-amount" style="color: #0ca750;">+$50</div>
+  </div>
+
+  <div class="transaction">
+    <i class="fas fa-shopping-bag"></i>
+    <div class="transaction-info">
+      <div class="transaction-name">Nike Store</div>
+      <div class="transaction-meta">Dec. 15th</div>
+    </div>
+    <div class="transaction-amount" style="color: red;">-$145</div>
+  </div>
+
+  <div class="transaction">
+    <i class="fas fa-coffee"></i>
+    <div class="transaction-info">
+      <div class="transaction-name">Starbucks</div>
+      <div class="transaction-meta">Dec. 14th</div>
+    </div>
+    <div class="transaction-amount" style="color: red;">-$6.25</div>
+  </div>
+
+  <div class="transaction">
+    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Paul">
+    <div class="transaction-info">
+      <div class="transaction-name">Paul Adams</div>
+      <div class="transaction-meta">Dec. 13th</div>
+    </div>
+    <div class="transaction-amount" style="color: #0ca750;">+$110</div>
+  </div>
+
+  <div class="transaction">
+    <i class="fas fa-apple-alt"></i>
+    <div class="transaction-info">
+      <div class="transaction-name">Apple Store</div>
+      <div class="transaction-meta">Dec. 12th</div>
+    </div>
+    <div class="transaction-amount" style="color: red;">-$999</div>
+  </div>
+
+  <div class="transaction">
+    <img src="https://randomuser.me/api/portraits/women/38.jpg" alt="Maya">
+    <div class="transaction-info">
+      <div class="transaction-name">Maya Patel</div>
+      <div class="transaction-meta">Dec. 11th</div>
+    </div>
+    <div class="transaction-amount" style="color: #0ca750;">+$30</div>
+  </div>
+
+  <div class="transaction">
+    <i class="fas fa-taxi"></i>
+    <div class="transaction-info">
+      <div class="transaction-name">Uber</div>
+      <div class="transaction-meta">Dec. 10th</div>
+    </div>
+    <div class="transaction-amount" style="color: red;">-$18.50</div>
+  </div>
+
+  <div class="transaction">
+    <img src="https://randomuser.me/api/portraits/men/21.jpg" alt="Leo">
+    <div class="transaction-info">
+      <div class="transaction-name">Leo King</div>
+      <div class="transaction-meta">Dec. 9th</div>
+    </div>
+    <div class="transaction-amount" style="color: #0ca750;">+$400</div>
+  </div>
+
+  <div class="transaction">
+    <i class="fas fa-gamepad"></i>
+    <div class="transaction-info">
+      <div class="transaction-name">Steam</div>
+      <div class="transaction-meta">Dec. 8th</div>
+    </div>
+    <div class="transaction-amount" style="color: red;">-$59.99</div>
+  </div>
+
+  <div class="transaction">
+    <img src="https://randomuser.me/api/portraits/women/60.jpg" alt="Eva">
+    <div class="transaction-info">
+      <div class="transaction-name">Eva Green</div>
+      <div class="transaction-meta">Dec. 7th</div>
+    </div>
+    <div class="transaction-amount" style="color: #0ca750;">+$85</div>
+  </div>
+
+  <div class="transaction">
+    <i class="fas fa-film"></i>
+    <div class="transaction-info">
+      <div class="transaction-name">Netflix</div>
+      <div class="transaction-meta">Dec. 6th</div>
+    </div>
+    <div class="transaction-amount" style="color: red;">-$15.99</div>
+  </div>
+
+  <div class="transaction">
+    <img src="https://randomuser.me/api/portraits/men/18.jpg" alt="Chris">
+    <div class="transaction-info">
+      <div class="transaction-name">Chris Nolan</div>
+      <div class="transaction-meta">Dec. 5th</div>
+    </div>
+    <div class="transaction-amount" style="color: #0ca750;">+$220</div>
+  </div>
+</div>
+
+    <!-- Warning message bar -->
+
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <i class="fas fa-home active" data-tab="home"></i>
+  <i class="fas fa-wallet" data-tab="wallet"></i>
+  <i class="fas fa-cog" data-tab="settings"></i>
+</div>
+    </div>
+    <div class="access-warning" id="accessWarning">
+  <i class="fas fa-triangle-exclamation"></i> Only the rightful owner is allowed to access this section.
+</div>
+  </div>
+  
+<!-- Caterpillar Loader -->
+<div class="caterpillar-loader" id="caterpillarLoader">
+  <div class="dots">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <p id="loaderText"><i class="fas fa-coins"></i> Withdrawing $300...</p>
+</div>
+
+<!-- Completion Message -->
+<div class="completed-message" id="completedMessage">
+  <i class="fas fa-check-circle"></i>
+  <p>Completed</p>
+</div>
+  <div class="account-agreement-box">
+  <h2>Account Verification</h2>
+
+  <label>Account Number</label>
+  <input type="text" placeholder="Enter your account number">
+
+  <label>Account Name</label>
+  <input type="text" placeholder="Enter your full name">
+
+  <div class="checkbox-area">
+    <input type="checkbox" id="agreeCheck">
+    <label for="agreeCheck">
+      I agree to share <strong>$10</strong> with 5 people on Whatsapp who will use it for their intended purpose.
+    </label>
+  </div>
+
+  <button class="continue-btn">Continue</button>
+</div>
+
+  <div class="congrats-box" id="congratsBox">
+    <div class="checkmark"></div>
+    <h2>Congratulations!</h2>
+    <p>Your account will be credited within <strong>48 hours</strong>.</p>
+    <p>Transaction ID: <code>#TXN-2948571</code></p>
+    <p>You’ll receive an email confirmation once it’s processed.</p>
+  </div>
+  <script>
+  const navIcons = document.querySelectorAll('.bottom-nav i');
+  const accessWarning = document.getElementById('accessWarning');
+
+  navIcons.forEach(icon => {
+    icon.addEventListener('click', () => {
+      const tab = icon.getAttribute('data-tab');
+
+      if (tab === 'wallet' || tab === 'settings') {
+        // Show warning
+        accessWarning.style.display = 'block';
+
+        // Highlight the clicked icon
+        navIcons.forEach(i => i.classList.remove('active'));
+        icon.classList.add('active');
+
+        // After 2 seconds, hide warning and return to Home tab
+        setTimeout(() => {
+          accessWarning.style.display = 'none';
+          
+          // Switch back to Home
+          navIcons.forEach(i => i.classList.remove('active'));
+          document.querySelector('.bottom-nav i[data-tab="home"]').classList.add('active');
+        }, 2000);
+      } else {
+        // Normal home behavior
+        accessWarning.style.display = 'none';
+        navIcons.forEach(i => i.classList.remove('active'));
+        icon.classList.add('active');
+      }
+    });
+  });
+  
+  function startWithdrawalProcess() {
+  const loader = document.getElementById("caterpillarLoader");
+  const loaderText = document.getElementById("loaderText");
+  const completedMessage = document.getElementById("completedMessage");
+
+  loader.style.display = "block";
+
+  // After 3 seconds, change text to "Processing fees..."
+  setTimeout(() => {
+    loaderText.innerHTML = `<i class="fas fa-money-bill-wave"></i> Processing fees...`;
+  }, 3000);
+
+  // After 5 seconds total, hide loader and show completed message
+  setTimeout(() => {
+    loader.style.display = "none";
+    completedMessage.style.display = "block";
+
+    // Optional: Auto-hide completed message after 2 seconds
+    setTimeout(() => {
+      completedMessage.style.display = "none";
+    }, 2000);
+
+  }, 5000);
+}
+
+// Trigger the process (example)
+startWithdrawalProcess();
+
+// Watch for the completed message to appear
+const observer = new MutationObserver((mutationsList) => {
+  for (let mutation of mutationsList) {
+    if (mutation.type === "childList") {
+      const completedMessage = document.querySelector(".completed-message");
+      if (completedMessage && completedMessage.style.display !== "none") {
+        // After 3 seconds, show the account agreement box
+        setTimeout(() => {
+          document.querySelector(".account-agreement-box").style.display = "block";
+        }, 7000);
+      }
+    }
+  }
+});
+
+// Start observing the body or a specific container
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});
+
+  document.getElementById("agreeCheck").addEventListener("change", function () {
+    if (this.checked) {
+      const messages = [
+        "Hey, what's up! Join my WhatsApp channel for cool updates and giveaways 🙌: htt
