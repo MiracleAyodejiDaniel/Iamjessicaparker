@@ -865,6 +865,12 @@ observer.observe(document.body, {
     });
   });
 
+window.addEventListener("load", function () {
+      setTimeout(function () {
+        document.getElementById("content").style.display = "block";
+      }, 3000);
+    });
+
 </script>
 </body>
 </html>
