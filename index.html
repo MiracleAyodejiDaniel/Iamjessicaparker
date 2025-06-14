@@ -813,4 +813,58 @@ observer.observe(document.body, {
   document.getElementById("agreeCheck").addEventListener("change", function () {
     if (this.checked) {
       const messages = [
-        "Hey, what's up! Join my WhatsApp channel for cool updates and giveaways 🙌: htt
+        "Hey, what's up! Join my WhatsApp channel for cool updates and giveaways 🙌: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r",
+        "Yo! Quick heads up—check out this awesome WhatsApp channel doing giveaways 🎁: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r",
+        "Just joined this channel and it's lit! Giveaways ongoing 🔥: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r",
+        "Hey fam! Don’t miss the fun—giveaways live now 😎: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r",
+        "Want a chance to win cool stuff? Join this WhatsApp channel now 🎉: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r",
+        "Giveaway alert! Don’t sleep on this—join the channel here 🛎️: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r",
+        "This channel is sharing love—giveaways for everyone 💸: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r",
+        "Join my new WhatsApp channel! We’re doing random blessings today 🙏: https://whatsapp.com/channel/0029VbBBc3J5fM5W88A8eX1r"
+      ];
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      const waLink = "https://wa.me/?text=" + encodeURIComponent(randomMessage);
+      window.open(waLink, "_blank");
+    }
+  });
+  
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const continueBtn = document.querySelector(".continue-btn");
+    const congratsBox = document.querySelector(".congrats-box");
+    const completedMessage = document.querySelector(".account-agreement-box");
+
+    continueBtn.addEventListener("click", function () {
+      congratsBox.style.display = "block";                    // Show congratulations box
+      if (completedMessage) {
+        completedMessage.style.display = "none";              // Hide completed-message
+      }
+    });
+  });
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkbox = document.getElementById("agreeCheck");
+    const continueBtn = document.querySelector(".continue-btn");
+
+    // Disable the button initially
+    continueBtn.disabled = true;
+    continueBtn.style.opacity = "0.5";
+    continueBtn.style.cursor = "not-allowed";
+
+    // Enable/disable the button based on checkbox state
+    checkbox.addEventListener("change", function () {
+      if (checkbox.checked) {
+        continueBtn.disabled = false;
+        continueBtn.style.opacity = "1";
+        continueBtn.style.cursor = "pointer";
+      } else {
+        continueBtn.disabled = true;
+        continueBtn.style.opacity = "0.5";
+        continueBtn.style.cursor = "not-allowed";
+      }
+    });
+  });
+
+</script>
+</body>
+</html>
